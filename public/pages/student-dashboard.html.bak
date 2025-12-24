@@ -1,0 +1,12 @@
+<section class="dashboard student-dashboard">
+  <div class="dashboard-inner container">
+
+    <h2 id="student-name"></h2>
+    <p id="student-summary"></p>
+
+    <div id="student-stats"></div>
+    <div id="student-courses"></div>
+    <div id="student-activities"></div>
+
+  </div>
+</section>

@@ -1,0 +1,133 @@
+<!-- public/pages/login.html -->
+  <div class="container">
+    <div class="login-container">
+      <div class="login-tabs" role="tablist" aria-label="Login tabs">
+        <button class="login-tab active" data-tab="student" role="tab" aria-selected="true">Student Login</button>
+        <button class="login-tab" data-tab="tutor" role="tab" aria-selected="false">Tutor Login</button>
+      </div>
+
+      <!-- Student Login Form -->
+      <div class="login-form active" id="student-login" role="tabpanel">
+        <div class="form-header">
+          <h2>Welcome Back, Student!</h2>
+          <p>Continue your learning journey</p>
+        </div>
+        <form id="student-login-form" autocomplete="on">
+          <div class="form-group">
+            <label for="student-email">Email Address</label>
+            <input type="email" id="student-email" name="email" placeholder="student@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="student-password">Password</label>
+            <input type="password" id="student-password" name="password" placeholder="Enter your password" required>
+          </div>
+          <div class="form-options">
+            <label class="checkbox">
+              <input type="checkbox" id="student-remember"> Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Login as Student</button>
+          <!-- inside the student login form footer -->
+        <div class="form-footer">
+        <p>
+           Don't have an account?
+          <a href="#" id="go-signup">Sign up here</a>
+        </p>
+      </div>
+
+        </form>
+        <div class="form-footer">
+          <p>New to Kalki? <a href="#" onclick="showPage('home-page')">Explore Courses</a></p>
+        </div>
+      </div>
+
+      <!-- Tutor Login Form -->
+      <div class="login-form" id="tutor-login" role="tabpanel" aria-hidden="true">
+        <div class="form-header">
+          <h2>Welcome Back, Instructor!</h2>
+          <p>Manage your courses and students</p>
+        </div>
+        <form id="tutor-login-form" autocomplete="on">
+          <div class="form-group">
+            <label for="tutor-email">Email Address</label>
+            <input type="email" id="tutor-email" name="email" placeholder="instructor@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="tutor-password">Password</label>
+            <input type="password" id="tutor-password" name="password" placeholder="Enter your password" required>
+          </div>
+          <div class="form-options">
+            <label class="checkbox">
+              <input type="checkbox" id="tutor-remember"> Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Login as Tutor</button>
+          <div class="form-footer">
+            <p>
+              Don't have an account?
+              <a href="javascript:void(0)" onclick="showPage('signup-page')">
+                  Sign up here
+              </a>
+            </p>
+          </div>
+
+        </form>
+        <div class="form-footer">
+          <p>Want to teach on Kalki? <a href="#" onclick="showPage('contact-page')">Become an Instructor</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<style>
+/* keep your existing variables, but these ensure the login matches site look */
+:root {
+  --primary: #6c63ff;
+  --dark: #222;
+  --gray: #6b7280;
+}
+
+/* container */
+.login-container {
+  max-width: 520px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(9,10,12,0.06);
+  overflow: hidden;
+}
+
+/* tabs */
+.login-tabs { display:flex; border-bottom:1px solid #f1f1f4; }
+.login-tab {
+  flex:1; padding:16px 18px; background:none; border:none; font-weight:700;
+  color:var(--gray); cursor:pointer; font-size:1rem;
+}
+.login-tab.active{ color:var(--primary); border-bottom:3px solid var(--primary); }
+
+/* form */
+.login-form { padding:34px 36px; display:none; }
+.login-form.active{ display:block; animation:fadeIn 360ms ease-out; }
+.form-header { text-align:center; margin-bottom:18px; }
+.form-header h2 { color:var(--dark); margin-bottom:6px; }
+.form-header p { color:var(--gray); margin:0; font-size:0.95rem; }
+
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; margin-bottom:8px; color:var(--dark); font-weight:600; }
+.form-group input {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ececec; font-size:1rem;
+}
+.form-group input:focus { outline:none; box-shadow:0 0 0 4px rgba(108,99,255,0.08); border-color:var(--primary); }
+
+.form-options { display:flex; justify-content:space-between; align-items:center; margin:10px 0 22px; color:var(--gray); }
+.checkbox { display:flex; gap:8px; align-items:center; color:var(--gray); cursor:pointer; }
+
+.btn-block { width:100%; padding:12px; font-size:1.05rem; border-radius:10px; }
+
+.form-footer { border-top:1px solid #f1f1f4; padding-top:18px; text-align:center; color:var(--gray); margin-top:22px; }
+
+/* small animation */
+@keyframes fadeIn { from {opacity:0; transform:translateY(6px)} to {opacity:1; transform:none} }
+</style>

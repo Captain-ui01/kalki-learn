@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotics Master Course | One-on-One Training</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .ds-course-page {
+            all: initial;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; overflow-x: hidden; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(52, 152, 219,0.4); } 70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(52, 152, 219,0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(52, 152, 219,0); } }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
+        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes glow { 0%,100% { box-shadow: 0 0 5px rgba(52, 152, 219,0.5), 0 0 10px rgba(41, 128, 185,0.3); } 50% { box-shadow: 0 0 20px rgba(52, 152, 219,0.8), 0 0 30px rgba(41, 128, 185,0.6); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes wave { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        @keyframes confetti-fall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+        @keyframes robot-move { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(20px) rotate(5deg); } 75% { transform: translateX(-20px) rotate(-5deg); } }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; animation: fadeInUp 0.8s ease-out; }
+        .progress-bar { width: 0; height: 5px; background: linear-gradient(90deg, #3498db, #2980b9); position: fixed; top: 0; left: 0; z-index: 9999; }
+        
+        .ds-course-page .section-title { text-align: center; margin-bottom: 40px; position: relative; padding-bottom: 20px; animation: slideInLeft 0.8s ease-out; }
+        .ds-course-page .section-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: linear-gradient(90deg, #007bff, #00d4ff); display: block; margin: 15px auto 0; border-radius: 2px; animation: shimmer 3s infinite linear; }
+        .ds-course-page .section-title h2 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 10px; position: relative; display: inline-flex; align-items: center; gap: 10px; }
+        .ds-course-page .title-robot { top: -12px; right: -30px; font-size: 1.6rem; animation: spin 4s linear infinite; display: inline-block; }      
+        /*.ds-course-page .section-title h2::after { content: '🤖'; position: absolute; top: -10px; right: -30px; font-size: 1.5rem; animation: spin 4s linear infinite; } */
+        .ds-course-page .course-tagline {  opacity: 1 !important; background: linear-gradient(90deg, #007bff, #00d4ff, #007bff); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 3s infinite linear; font-size: 1.1rem; text-align: center; margin-top: 15px; font-weight: 600; }
+        
+        .ds-course-page .course-description { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 40px; animation: slideInRight 0.8s ease-out 0.5s both; position: relative; overflow: hidden; }
+        .course-description::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, #3498db, #2980b9, #2ecc71); animation: shimmer 2s infinite linear; }
+        .course-description h3 { color: #2c3e50; font-size: 1.8rem; margin-bottom: 20px; position: relative; display: inline-block; }
+        .course-description h3::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60px; height: 3px; background: #3498db; animation: shimmer 2s infinite linear reverse; }
+        
+        .course-highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; animation: fadeInUp 0.8s ease-out 0.7s both; }
+        .highlight-item { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 5px solid #3498db; position: relative; overflow: hidden; }
+        .highlight-item::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.7s; }
+        .highlight-item:hover::before { left: 100%; }
+        .highlight-item:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.15); border-left-color: #2ecc71; }
+        .highlight-item i { font-size: 3rem; color: #3498db; margin-bottom: 20px; display: block; animation: float 3s ease-in-out infinite; }
+        
+        .one-on-one-course-details { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); margin-top: 40px; animation: fadeInUp 1s ease-out 0.9s both; position: relative; overflow: hidden; }
+        .one-on-one-course-details::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(52,152,219,0.05), transparent); animation: spin 20s linear infinite; z-index: 0; }
+        .one-on-one-course-details > * { position: relative; z-index: 1; }
+        
+        .ds-course-page .course-header { display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 18px; margin-bottom: 24px; border-bottom: 3px solid #e9ecef; position: relative; gap: 10px; }
+        .course-header h3 { font-size: 2.2rem; color: #2c3e50; margin-bottom: 8px; animation: slideInLeft 0.8s ease-out; }
+        .course-meta { display: flex; justify-content: center; gap: 16px; margin: 10px 0; animation: fadeInUp 0.8s ease-out 1s both; }
+        .course-meta span { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; color: #6c757d; padding: 10px 20px; background: #f8f9fa; border-radius: 50px; transition: all 0.3s ease; }
+        .course-meta span:hover { background: #3498db; color: white; transform: translateY(-5px); }
+        .course-meta i { font-size: 1.3rem; animation: wave 2s infinite; }
+        .course-pricing { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 10px; animation: fadeInUp 0.8s ease-out 1.2s both; }
+        .current-price { font-size: 3.5rem; font-weight: bold; color: #28a745; position: relative; padding: 10px 20px; background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%); border-radius: 10px; animation: pulse 2s infinite; }
+        .current-price::before { content: '💰'; position: absolute; top: -20px; right: -20px; font-size: 2rem; animation: bounce 1s infinite; }
+        .original-price { font-size: 1.8rem; text-decoration: line-through; color: #6c757d; position: relative; }
+        .discount { background: linear-gradient(135deg, #2980b9, #2ecc71); color: white; padding: 10px 25px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; animation: bounce 1s infinite 2s; box-shadow: 0 5px 15px rgba(41,128,185,0.4); }
+        
+        .ds-course-page .curriculum-section { margin: 50px 0; animation: fadeInUp 0.8s ease-out 1.4s both; }
+        .curriculum-section h4 { font-size: 1.8rem; color: #2c3e50; margin-bottom: 30px; padding-bottom: 10px; border-bottom: 3px solid #3498db; position: relative; display: inline-block; }
+        .curriculum-section h4::after { content: '⚙️'; position: absolute; right: -40px; animation: wave 2s infinite; }
+        .curriculum-module { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); padding: 25px; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 5px solid #2980b9; position: relative; counter-increment: module; animation: slideInRight 0.6s ease-out forwards; opacity: 0; }
+        .curriculum-module:nth-child(1) { animation-delay: 1.6s; }
+        .curriculum-module:nth-child(2) { animation-delay: 1.8s; }
+        .curriculum-module:nth-child(3) { animation-delay: 2.0s; }
+        .curriculum-module:nth-child(4) { animation-delay: 2.2s; }
+        .curriculum-module:nth-child(5) { animation-delay: 2.4s; }
+        .curriculum-module:nth-child(6) { animation-delay: 2.6s; }
+        .curriculum-module:nth-child(7) { animation-delay: 2.8s; }
+        .curriculum-module::before { content: counter(module); position: absolute; top: -15px; left: -15px; width: 40px; height: 40px; background: linear-gradient(135deg, #3498db, #2980b9); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(52,152,219,0.3); animation: float 4s ease-in-out infinite; animation-delay: calc(var(--module-index) * 0.5s); }
+        .curriculum-module h5 { color: #2c3e50; font-size: 1.3rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .curriculum-module h5 i { color: #3498db; animation: wave 3s infinite; }
+        .curriculum-module:hover { transform: translateX(15px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.15); border-left-color: #2ecc71; background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%); }
+        .curriculum-module ul { margin-left: 20px; list-style: none; }
+        .curriculum-module li { margin-bottom: 10px; line-height: 1.6; position: relative; padding-left: 25px; }
+        .curriculum-module li::before { content: '✓'; position: absolute; left: 0; color: #3498db; font-weight: bold; animation: bounce 1s infinite; animation-delay: calc(var(--li-index) * 0.1s); }
+        
+        .outcome-grid, .tech-stack, .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; animation: fadeInUp 0.8s ease-out 2.8s both; }
+        .outcome-item, .tech-item, .project-item { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; position: relative; overflow: hidden; }
+        .outcome-item::before, .tech-item::before, .project-item::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.7s; }
+        .outcome-item:hover::before, .tech-item:hover::before, .project-item:hover::before { left: 100%; }
+        .outcome-item:hover, .tech-item:hover, .project-item:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .tech-item { background: linear-gradient(135deg, #e8f4fc 0%, #d4eaf7 100%); animation: float 6s ease-in-out infinite; animation-delay: calc(var(--tech-index) * 0.2s); }
+        .tech-item:hover { animation: none; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        
+        .enrollment-section { text-align: center; margin-top: 50px; padding-top: 40px; border-top: 3px solid #e9ecef; animation: fadeInUp 0.8s ease-out 3s both; }
+        .ds-course-page .btn-enroll { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; border: none; padding: 20px 50px; font-size: 1.3rem; font-weight: bold; border-radius: 50px; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; animation: glow 2s infinite; display: inline-flex; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(52,152,219,0.4); }
+        .btn-enroll::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.7s; }
+        .btn-enroll:hover::before { left: 100%; }
+        .btn-enroll:hover { animation: none; transform: translateY(-10px) scale(1.1); box-shadow: 0 20px 50px rgba(52,152,219,0.6); background: linear-gradient(135deg, #2980b9 0%, #21618c 100%); }
+        .btn-enroll i { font-size: 1.5rem; animation: bounce 1s infinite; }
+        .enrollment-note { margin-top: 20px; color: #6c757d; font-size: 0.95rem; animation: fadeInUp 0.8s ease-out 3.2s both; }
+        
+        .confetti { position: fixed; width: 15px; height: 15px; background: #f00; opacity: 0; animation: confetti-fall 5s linear forwards; pointer-events: none; z-index: 10000; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .section-title h2 { font-size: 2rem; }
+            .course-highlights { grid-template-columns: 1fr; }
+            .course-meta { flex-direction: column; gap: 15px; }
+            .course-pricing { flex-direction: column; gap: 20px; }
+            .curriculum-module::before { width: 35px; height: 35px; font-size: 1rem; top: -12px; left: -12px; }
+            .outcome-grid, .tech-stack, .project-grid { grid-template-columns: 1fr; }
+            .btn-enroll { padding: 15px 30px; font-size: 1.1rem; }
+        }
+        
+        .animate-in { animation: fadeInUp 0.6s ease-out forwards; }
+        .typing-text { display: inline-block; overflow: hidden; white-space: nowrap; border-right: 2px solid #3498db; animation: typing 3s steps(40, end), blink 0.75s step-end infinite; }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { 0%,100% { border-color: transparent; } 50% { border-color: #3498db; } }
+        
+        .course-nav { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; animation: fadeInUp 0.8s ease-out; }
+        .course-nav ul { display: flex; justify-content: center; gap: 20px; list-style: none; flex-wrap: wrap; }
+        .course-nav a { text-decoration: none; color: #666; font-weight: 500; padding: 10px 20px; border-radius: 50px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .course-nav a::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(52,152,219,0.1), transparent); transition: left 0.7s; }
+        .course-nav a:hover::before { left: 100%; }
+        .course-nav a:hover { background: #3498db; color: white; transform: translateY(-3px); }
+        .course-nav a.active { background: linear-gradient(135deg, #3498db, #2980b9); color: white; box-shadow: 0 5px 15px rgba(52,152,219,0.4); }
+        
+        .robot-animation { text-align: center; margin: 30px 0; }
+        .robot-icon { font-size: 4rem; animation: robot-move 3s infinite ease-in-out; }
+    </style>
+</head>
+<body>
+    <div class="ds-course-page">
+    <div class="progress-bar"></div>
+    <div class="container">
+        <nav class="course-nav">
+            <ul>
+                <li><a href="#" onclick="showPage('datascience-page')">Data Science</a></li>
+                <li><a href="#" onclick="showPage('ml-page')">Machine Learning</a></li>
+                <li><a href="#" onclick="showPage('webdev-page')">Web Development</a></li>
+                <li><a href="#" onclick="showPage('python-page')">Python</a></li>
+                <li><a href="#" onclick="showPage('aiprompt-page')">AI Prompt Engineering</a></li>
+                <li><a href="#" onclick="showPage('mobile-page')">Mobile Development</a></li>
+                <li><a href="#" onclick="showPage('medicalcoding-page')">Medical Coding</a></li>
+                <li><a href="#" onclick="showPage('javascript-page')">JavaScript</a></li>
+                <li><a href="#" onclick="showPage('java-page')">Java</a></li>
+                <li><a href="#" onclick="showPage('networking-page')">Networking</a></li>
+                <li><a href="#" class="active">Robotics</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="section-title">
+            <h2>Robotics Master Course <span class="title-robot">🤖</span></h2>
+            <p class="course-tagline">One-on-One Expert Training • 150 Hours • Hands-on Robotics Curriculum</p>
+        </div>
+        
+        <div class="course-description">
+            <h3>Course Overview</h3>
+            <p>Master robotics engineering through personalized one-on-one mentorship. This 150-hour intensive program covers robotics fundamentals, embedded systems, computer vision, AI integration, and hands-on robot building with industry-standard tools and technologies.</p>
+            
+            <div class="robot-animation">
+                <div class="robot-icon">🤖</div>
+            </div>
+            
+            <div class="course-highlights">
+                <div class="highlight-item">
+                    <i class="fas fa-robot"></i>
+                    <h4>Hands-on Robot Building</h4>
+                    <p>Build and program real robots from scratch using Arduino, Raspberry Pi, and advanced robotics kits.</p>
+                </div>
+                <div class="highlight-item">
+                    <i class="fas fa-eye"></i>
+                    <h4>Computer Vision</h4>
+                    <p>Implement object detection, facial recognition, and autonomous navigation using OpenCV and AI.</p>
+                </div>
+                <div class="highlight-item">
+                    <i class="fas fa-brain"></i>
+                    <h4>AI Integration</h4>
+                    <p>Integrate machine learning models for autonomous decision-making and intelligent robot behavior.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="one-on-one-course-details">
+            <div class="course-header">
+                <h3>Robotics Engineering Program</h3>
+                <div class="course-meta">
+                    <span><i class="far fa-clock"></i> 150 Hours</span>
+                    <span><i class="fas fa-user-tie"></i> One-on-One</span>
+                    <span><i class="fas fa-signal"></i> Intermediate to Advanced</span>
+                </div>
+                <div class="course-pricing">
+                    <div class="current-price">$1,200</div>
+                    <div class="original-price">$2,200</div>
+                    <div class="discount">45% OFF</div>
+                </div>
+            </div>
+            
+            <div class="curriculum-section">
+                <h4>Comprehensive Curriculum</h4>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-microchip"></i> Robotics Fundamentals (25 hrs)</h5>
+                    <ul>
+                        <li>Introduction to Robotics and Automation</li>
+                        <li>Robotics History and Applications</li>
+                        <li>Basic Mechanics and Kinematics</li>
+                        <li>Sensors and Actuators Fundamentals</li>
+                        <li>Robot Classification and Types</li>
+                        <li><strong>Project:</strong> Simple Robotic Arm Design</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-code"></i> Programming for Robotics (30 hrs)</h5>
+                    <ul>
+                        <li>Python for Robotics Applications</li>
+                        <li>C++ for Embedded Systems</li>
+                        <li>ROS (Robot Operating System) Basics</li>
+                        <li>Arduino Programming Fundamentals</li>
+                        <li>Raspberry Pi Setup and Configuration</li>
+                        <li><strong>Project:</strong> Motor Control Program</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-cogs"></i> Embedded Systems & Electronics (30 hrs)</h5>
+                    <ul>
+                        <li>Basic Electronics and Circuit Design</li>
+                        <li>Microcontrollers (Arduino/ESP32)</li>
+                        <li>Motor Drivers and Power Management</li>
+                        <li>Sensor Integration (Ultrasonic, IR, Gyro)</li>
+                        <li>Wireless Communication (Bluetooth, WiFi)</li>
+                        <li><strong>Project:</strong> Line Following Robot</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-eye"></i> Computer Vision (25 hrs)</h5>
+                    <ul>
+                        <li>OpenCV Fundamentals for Robotics</li>
+                        <li>Image Processing Techniques</li>
+                        <li>Object Detection and Recognition</li>
+                        <li>Face and Gesture Recognition</li>
+                        <li>Real-time Video Processing</li>
+                        <li><strong>Project:</strong> Vision-based Navigation System</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-brain"></i> AI & Machine Learning in Robotics (25 hrs)</h5>
+                    <ul>
+                        <li>Machine Learning for Robotics</li>
+                        <li>Neural Networks for Robot Control</li>
+                        <li>Reinforcement Learning Applications</li>
+                        <li>Path Planning and Navigation Algorithms</li>
+                        <li>Autonomous Decision Making</li>
+                        <li><strong>Project:</strong> AI-powered Autonomous Robot</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-industry"></i> Advanced Robotics (10 hrs)</h5>
+                    <ul>
+                        <li>Industrial Robotics and Automation</li>
+                        <li>Drone Technology and Applications</li>
+                        <li>Humanoid Robots and Bipedal Motion</li>
+                        <li>Swarm Robotics Principles</li>
+                        <li>3D Printing for Robotics</li>
+                        <li><strong>Project:</strong> Custom Robot Design</li>
+                    </ul>
+                </div>
+                
+                <div class="curriculum-module">
+                    <h5><i class="fas fa-rocket"></i> Capstone Project (5 hrs)</h5>
+                    <ul>
+                        <li>Complete Robot Design and Planning</li>
+                        <li>System Integration and Testing</li>
+                        <li>Documentation and Presentation</li>
+                        <li>Performance Optimization</li>
+                        <li>Deployment and Demonstration</li>
+                        <li><strong>Final Project:</strong> Build Complete Functional Robot</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tools-technologies curriculum-section">
+                <h4>Tools & Technologies Covered</h4>
+                <div class="tech-stack">
+                    <span class="tech-item">Arduino</span>
+                    <span class="tech-item">Raspberry Pi</span>
+                    <span class="tech-item">ROS</span>
+                    <span class="tech-item">OpenCV</span>
+                    <span class="tech-item">Python</span>
+                    <span class="tech-item">C++</span>
+                    <span class="tech-item">TensorFlow</span>
+                    <span class="tech-item">SolidWorks</span>
+                </div>
+            </div>
+            
+            <div class="career-outcomes curriculum-section">
+                <h4>Career Outcomes</h4>
+                <p>Graduates of this program have secured positions as:</p>
+                <div class="outcome-grid">
+                    <div class="outcome-item">
+                        <h5>Robotics Engineer</h5>
+                        <p>$85k - $140k</p>
+                    </div>
+                    <div class="outcome-item">
+                        <h5>Automation Engineer</h5>
+                        <p>$75k - $130k</p>
+                    </div>
+                    <div class="outcome-item">
+                        <h5>Embedded Systems Engineer</h5>
+                        <p>$80k - $135k</p>
+                    </div>
+                    <div class="outcome-item">
+                        <h5>AI Robotics Specialist</h5>
+                        <p>$90k - $160k</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="enrollment-section">
+                <button class="btn-enroll enroll-btn" data-course-id="robotics" data-course-title="Robotics">
+                    <i class="fas fa-user-graduate"></i> Start One-on-One Training
+                </button>
+                <p class="enrollment-note">Includes robotics kit guidance and industry project mentorship.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/course-robotics.js"></script>
+    </div>
+</body>
+</html>

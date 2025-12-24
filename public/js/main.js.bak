@@ -1,0 +1,237 @@
+// Enhanced Page Navigation with Transitions
+function showPage(pageId) {
+    // Get current active page
+    const currentPage = document.querySelector('.page.active-page');
+    const nextPage = document.getElementById(pageId);
+    
+    if (currentPage && nextPage && currentPage !== nextPage) {
+        // Add fade out animation to current page
+        currentPage.style.animation = 'fadeOut 0.3s ease-out forwards';
+        
+        // After fade out, switch pages and fade in
+        setTimeout(() => {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+                page.style.animation = '';
+            });
+            
+            // Show the selected page with fade in animation
+            nextPage.classList.add('active-page');
+            nextPage.style.animation = 'fadeIn 0.5s ease-out forwards';
+            
+            // Update mobile bottom nav active state
+            document.querySelectorAll('.mobile-bottom-nav .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+            
+            // Close mobile menu if open
+            document.getElementById('main-nav').classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Trigger scroll animations for new page
+            setTimeout(revealOnScroll, 100);
+            
+        }, 300);
+    } else {
+        // Initial page load or same page click
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active-page');
+        });
+        nextPage.classList.add('active-page');
+        nextPage.style.animation = 'fadeIn 0.5s ease-out forwards';
+    }
+}
+
+// Dropdown Menu - Fixed Version
+function toggleDropdown(event) {
+    event.preventDefault();
+    const dropdown = event.target.closest('.dropdown');
+    
+    // Close all other dropdowns first
+    document.querySelectorAll('.dropdown').forEach(otherDropdown => {
+        if (otherDropdown !== dropdown) {
+            otherDropdown.classList.remove('active');
+        }
+    });
+    
+    // Toggle the current dropdown
+    dropdown.classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('active');
+        });
+    }
+});
+
+// Close dropdown when a course is selected
+document.querySelectorAll('.dropdown-content a').forEach(link => {
+    link.addEventListener('click', function() {
+        const dropdown = this.closest('.dropdown');
+        dropdown.classList.remove('active');
+    });
+});
+
+// Enhanced Mobile Menu
+document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+    const nav = document.getElementById('main-nav');
+    nav.classList.toggle('active');
+    this.classList.toggle('active');
+    
+    // Animate hamburger icon
+    if (this.classList.contains('active')) {
+        this.innerHTML = '<i class="fas fa-times"></i>';
+        this.style.transform = 'rotate(180deg)';
+    } else {
+        this.innerHTML = '<i class="fas fa-bars"></i>';
+        this.style.transform = 'rotate(0deg)';
+    }
+});
+
+// Close mobile menu when clicking on links
+document.querySelectorAll('#main-nav a').forEach(link => {
+    link.addEventListener('click', function() {
+        document.getElementById('main-nav').classList.remove('active');
+        document.getElementById('mobile-menu-btn').classList.remove('active');
+        document.getElementById('mobile-menu-btn').innerHTML = '<i class="fas fa-bars"></i>';
+        document.getElementById('mobile-menu-btn').style.transform = 'rotate(0deg)';
+    });
+});
+
+// FAQ Accordion
+document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', function() {
+        this.classList.toggle('active');
+    });
+});
+
+// Course Card Click
+document.querySelectorAll('.course-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const coursePage = this.getAttribute('data-course');
+        showPage(coursePage);
+    });
+});
+
+// Syllabus Accordion
+document.querySelectorAll('.class-header').forEach(header => {
+    header.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const isActive = this.classList.contains('active');
+        
+        // Close all accordions
+        document.querySelectorAll('.class-header').forEach(h => {
+            h.classList.remove('active');
+            h.nextElementSibling.style.display = 'none';
+        });
+        
+        // Open clicked accordion if it wasn't active
+        if (!isActive) {
+            this.classList.add('active');
+            content.style.display = 'block';
+        }
+    });
+});
+
+// Syllabus Card Toggle
+document.querySelectorAll('.syllabus-title').forEach(title => {
+    title.addEventListener('click', function() {
+        const details = this.nextElementSibling;
+        const isActive = this.classList.contains('active');
+        
+        // Toggle current card
+        this.classList.toggle('active');
+        
+        if (this.classList.contains('active')) {
+            details.style.display = 'block';
+        } else {
+            details.style.display = 'none';
+        }
+    });
+});
+
+// Welcome Overlay
+const welcomeBtn = document.getElementById('welcome-enter');
+if (welcomeBtn) {
+  welcomeBtn.addEventListener('click', function() {
+    const overlay = document.getElementById('welcome-overlay');
+    if (overlay) {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
+
+// Enhanced animations for elements when they come into view
+function revealOnScroll() {
+    const reveals = document.querySelectorAll('.reveal');
+    
+    reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+            element.classList.add('visible');
+        }
+    });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+// Initial call to check elements already in view
+revealOnScroll();
+
+// Initialize the first class accordion as open (guarded)
+const firstClassHeader = document.querySelector('.class-header');
+if (firstClassHeader) {
+  firstClassHeader.classList.add('active');
+  const sibling = firstClassHeader.nextElementSibling;
+  if (sibling) sibling.style.display = 'block';
+}
+
+
+// Add bounce-in animation to elements
+document.querySelectorAll('.course-card, .path-card, .instructor-card').forEach((card, index) => {
+    card.classList.add('bounce-in');
+    card.style.animationDelay = `${index * 0.1}s`;
+});
+
+// Form validation for login/signup
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Add your form submission logic here
+        alert('Form submitted! In a real application, this would send data to a server.');
+    });
+});
+
+// Enhanced mobile navigation
+document.querySelectorAll('.mobile-bottom-nav .nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.mobile-bottom-nav .nav-item').forEach(navItem => {
+            navItem.classList.remove('active');
+        });
+        this.classList.add('active');
+    });
+});
+
+// Scroll Progress Indicator
+window.addEventListener('scroll', function() {
+    const winHeight = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.pageYOffset;
+    const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+    document.querySelector('.scroll-progress-bar').style.width = scrollPercent + '%';
+});  

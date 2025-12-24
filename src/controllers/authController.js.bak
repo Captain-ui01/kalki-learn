@@ -1,0 +1,212 @@
+// src/controllers/authController.js (CommonJS)
+const bcrypt = require('bcrypt');
+const User = require('../models/User'); // adjust path if your model is elsewhere
+const jwt = require("jsonwebtoken");
+const path = require('path');
+const mongoose = require('mongoose'); 
+const Student = require('../models/Student');
+const Teacher = require('../models/Teacher');
+const { getMongoose } = require('../config/db');
+// uploadAvatar: expects req.userId (set by authMiddleware), req.file
+exports.uploadAvatar = async (req, res) => {
+  try {
+    const userId = (req.user && (req.user._id || req.user.id)) || req.userId;   
+    if (!req.userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
+
+    // Build public URL path (assuming server serves /public)
+    const avatarUrl = `/uploads/${req.file.filename}`;
+
+    // Use req.user (already loaded by middleware) to avoid an extra DB find
+    let user = req.user;
+    // If req.user is not a full doc but only an id, fallback to findById
+    if (!user.save) {
+      user = await User.findById(req.user.id || req.user._id);
+      if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.avatar = avatarUrl;
+    await user.save();
+
+    return res.json({ success: true, avatar: avatarUrl, user: { name: user.name, email: user.email, avatar: avatarUrl, _id: user._id } });
+  } catch (err) {
+    console.error('uploadAvatar error', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!req.userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    if (name) user.name = name;
+    await user.save();
+    return res.json({ success: true, user: { name: user.name, email: user.email, avatar: user.avatar, _id: user._id } });
+  } catch (err) {
+    console.error('updateProfile error', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// Generate JWT
+const generateToken = (userId, role) => {
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '7d' });
+};
+
+function getModels() {
+  const mongoose = getMongoose();
+  const Student = StudentFactory(mongoose);
+  const Teacher = TeacherFactory(mongoose);
+  return { Student, Teacher };
+}
+
+// POST /api/auth/signup
+exports.signup = async (req, res) => {
+  try {
+    console.log('Signup request body:', req.body);
+    const { name, email, password, role } = req.body || {};
+
+    // basic validation
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields (name, email, password).'
+      });
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      return res.status(400).json({ success: false, message: 'Invalid email format.' });
+    }
+
+    // normalize role
+    const userRole = (role || 'student').toLowerCase();
+    if (!['student', 'teacher', 'tutor'].includes(userRole)) {
+      return res.status(400).json({ success: false, message: 'Invalid role' });
+    }
+
+    // make sure model variables exist (either via require or via mongoose.model fallback)
+    let StudentModel = null;
+    let TeacherModel = null;
+    try {
+      StudentModel = require('../models/Student');
+      TeacherModel = require('../models/Teacher');
+    } catch (e) {
+      // fallback: maybe models were registered on mongoose earlier as part of app init
+      try {
+        StudentModel = mongoose.model('Student');
+      } catch (ee) { /* ignore */ }
+      try {
+        TeacherModel = mongoose.model('Teacher');
+      } catch (ee) { /* ignore */ }
+    }
+
+    // if still not found, return helpful error
+    if (!StudentModel || !TeacherModel) {
+      console.error('Model load error: StudentModel or TeacherModel not found');
+      return res.status(500).json({ success: false, message: 'Server misconfiguration: models not loaded' });
+    }
+
+    // choose which model to use
+    const ModelToUse = (userRole === 'teacher' || userRole === 'tutor') ? TeacherModel : StudentModel;
+
+    // check for existing user in the chosen collection
+    const existing = await ModelToUse.findOne({ email: email.toLowerCase().trim() });
+    if (existing) {
+      return res.status(409).json({ success: false, message: 'User with that email already exists.' });
+    }
+
+    // hash password
+    const hashed = await bcrypt.hash(password, 10);
+
+    // create user doc (include role for clarity)
+    const userDoc = new ModelToUse({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashed,
+      role: userRole
+    });
+
+    await userDoc.save();
+
+    // generate token
+    const token = generateToken(userDoc._id);
+
+    return res.status(201).json({
+      success: true,
+      message: 'User created',
+      token,
+      user: {
+        id: userDoc._id,
+        name: userDoc.name,
+        email: userDoc.email,
+        avatar: userDoc.avatar || null,
+        role: userDoc.role
+      }
+    });
+
+  } catch (err) {
+    console.error('Signup error', err);
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ success: false, message: messages.join(', ') });
+    }
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+// POST /api/auth/login
+exports.login = async (req, res) => {
+  try {
+    console.log('Login request body:', req.body);
+    const { email, password, role } = req.body || {};
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Missing email or password.' });
+    }
+
+    // find user by email
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    // after `const user = await User.findOne({ email: ... })
+    if (!user) {
+      // don't reveal which part failed — generic message
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    // verify password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    // If the client supplied a role (from the form), enforce it
+    if (role && user.role !== role) {
+      // 403 Forbidden — user credentials ok but wrong login form
+      const hint = user.role === 'teacher' ? 'Please use the Tutor login.' : 'Please use the Student login.';
+      return res.status(403).json({ success: false, message: `Role mismatch. ${hint}` });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    return res.json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        avatar: user.avatar || null
+      }
+    });
+
+  } catch (err) {
+    console.error('Login error', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

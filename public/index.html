@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalki E-Learning Platform - Learn Programming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="css/kalki-dashboard-v2.css">
+
+</head>
+<body>
+
+   <!-- Welcome overlay added for playful intro -->
+    <div id="welcome-overlay" aria-hidden="false" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2000;background:linear-gradient(135deg, rgba(108,99,255,0.95), rgba(255,101,132,0.95));color:white;flex-direction:column;gap:20px;">
+        <img src="https://content3.jdmagicbox.com/v2/comp/ahmedabad/x4/079pxx79.xx79.231117201306.x4x4/catalogue/kalki-orignals-sarangpur-ahmedabad-women-readymade-garment-retailers-3ldqropqb6.jpg" alt="Kalki" style="width:120px;height:120px;border-radius:50%;object-fit:cover;box-shadow:0 10px 30px rgba(0,0,0,0.2);transform:scale(0);animation:logo-pop 700ms ease-out forwards;">
+        <h1 id="welcome-title" style="font-size:2rem;opacity:0;transform:translateY(10px);animation:welcome-fade 800ms 500ms forwards;">Welcome to Kalki Learning!</h1>
+        <p id="welcome-sub" style="opacity:0;transform:translateY(10px);animation:welcome-fade 800ms 700ms forwards;max-width:600px;text-align:center;">Fun, playful and energetic coding lessons for young learners — let's make learning an adventure!</p>
+        <button id="welcome-enter" style="margin-top:16px;padding:10px 22px;border-radius:30px;border:none;font-weight:700;cursor:pointer;transform:scale(0);animation:btn-pop 600ms 1100ms forwards;">Enter Site</button>
+    </div>
+
+
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress">
+        <div class="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://content3.jdmagicbox.com/v2/comp/ahmedabad/x4/079pxx79.xx79.231117201306.x4x4/catalogue/kalki-orignals-sarangpur-ahmedabad-women-readymade-garment-retailers-3ldqropqb6.jpg">
+                    <span>Kalki</span>
+                </div>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav id="main-nav">
+                    <ul>
+                        <li><a href="#" onclick="showPage('home-page')">Home</a></li>
+                        <li><a href="#" onclick="showPage('dashboard-page')">Dashboard</a></li>
+                        <li class="dropdown">
+                            <a href="#" onclick="toggleDropdown(event)">Courses <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#" onclick="showPage('python-page')">Python Programming</a>
+                                <a href="#" onclick="showPage('webdev-page')">Web Development</a>
+                                <a href="#" onclick="showPage('javascript-page')">JavaScript</a>
+                                <a href="#" onclick="showPage('datascience-page')">Data Science</a>
+                                <a href="#" onclick="showPage('aiprompt-page')">AI Prompt Engineering</a>
+                                <a href="#" onclick="showPage('mobile-page')">Mobile Development</a>
+                                <a href="#" onclick="showPage('robotics-page')">Robotics</a>
+                                <a href="#" onclick="showPage('java-page')">Java</a>
+                                <a href="#" onclick="showPage('ml-page')">Machine Learning</a>
+                                <a href="#" onclick="showPage('medicalcoding-page')">Medical Coding</a>
+                                <a href="#" onclick="showPage('networking-page')">Networking</a>
+                            </div>
+                        </li>
+                        <li><a href="#" onclick="showPage('syllabus-page')">Syllabus</a></li>
+                        <li><a href="#" onclick="showPage('about-page')">About</a></li>
+                        <li><a href="#" onclick="showPage('blog-page')">Blog</a></li>
+                        <li><a href="#" onclick="showPage('contact-page')">Contact</a></li>
+                    </ul>
+                </nav>
+                                <!-- AUTH BUTTONS: required by main-2.js renderAuthUI() -->
+                <div id="auth-buttons" class="auth-buttons">
+                    <!-- default Login button — will be replaced by JS when user logs in -->
+                    <button class="btn btn-outline" onclick="showPage('login-page')">Login</button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav">
+        <a href="#" class="nav-item active" onclick="showPage('home-page')">
+            <i class="fas fa-home nav-icon"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showPage('dashboard-page')">
+            <i class="fas fa-tachometer-alt nav-icon"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showPage('syllabus-page')">
+            <i class="fas fa-book nav-icon"></i>
+            <span>Syllabus</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showPage('about-page')">
+            <i class="fas fa-info-circle nav-icon"></i>
+            <span>About</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showPage('contact-page')">
+            <i class="fas fa-envelope nav-icon"></i>
+            <span>Contact</span>
+        </a>
+    </div>
+
+    
+
+    <!-- Page Container -->
+    <div id="page-container">
+        <!-- Pages will be loaded here dynamically -->
+        <div id="home-page" class="page active-page"></div>
+        <div id="dashboard-page" class="page"></div>
+        <div id="syllabus-page" class="page"></div>
+        <div id="about-page" class="page"></div>
+        <div id="blog-page" class="page"></div>
+        <div id="contact-page" class="page"></div>
+        <div id="login-page" class="page"></div>
+        <div id="signup-page" class="page"></div>
+        <div id="student-dashboard-page" class="page"></div>
+        <div id="teacher-dashboard-page" class="page"></div>
+        <div id="enrollment-page" class="page"></div>
+
+        
+        <!-- Course Pages -->
+        <div id="python-page" class="page"></div>
+        <div id="webdev-page" class="page"></div>
+        <div id="javascript-page" class="page"></div>
+        <div id="datascience-page" class="page"></div>
+        <div id="aiprompt-page" class="page"></div>
+        <div id="mobile-page" class="page"></div>
+        <div id="robotics-page" class="page"></div>
+        <div id="java-page" class="page"></div>
+        <div id="ml-page" class="page"></div>
+        <div id="medicalcoding-page" class="page"></div>
+        <div id="networking-page" class="page"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Kalki</h3>
+                    <p>Making quality programming education accessible to everyone, everywhere.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home-page')">Home</a></li>
+                        <li><a href="#" onclick="showPage('about-page')">About Us</a></li>
+                        <li><a href="#" onclick="showPage('syllabus-page')">Syllabus</a></li>
+                        <li><a href="#" onclick="showPage('blog-page')">Blog</a></li>
+                        <li><a href="#" onclick="showPage('contact-page')">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Courses</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('python-page')">Python Programming</a></li>
+                        <li><a href="#" onclick="showPage('webdev-page')">Web Development</a></li>
+                        <li><a href="#" onclick="showPage('datascience-page')">Data Science</a></li>
+                        <li><a href="#" onclick="showPage('aiprompt-page')">AI Prompt Engineering</a></li>
+                        <li><a href="#" onclick="showPage('generative-ai-page')">Generative AI</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Kalki E-Learning Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/teacher-dashboard.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/main-2.js"></script>
+    <script src="js/enrollment.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/animations.js"></script>
+
+</body>
+</html>

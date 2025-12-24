@@ -1,0 +1,36 @@
+async function initTeacherDashboard() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:5000/api/teacher/dashboard", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("teacher-name").innerText =
+    `Welcome, ${data.name}`;
+
+  renderTeacherCourses(data.courses);
+}
+
+function renderTeacherCourses(courses) {
+  const container = document.getElementById("teacher-courses");
+  container.innerHTML = "";
+
+  courses.forEach(course => {
+    container.innerHTML += `
+      <div class="course-card">
+        <h4>${course.title}</h4>
+        <p>Students: ${course.students}</p>
+      </div>
+    `;
+  });
+}
+
+document.addEventListener("page:loaded", e => {
+  if (e.detail === "teacher-dashboard-page") {
+    initTeacherDashboard();
+  }
+});

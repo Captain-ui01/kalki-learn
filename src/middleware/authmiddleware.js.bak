@@ -1,0 +1,81 @@
+// src/middleware/authMiddleware.js
+const jwt = require('jsonwebtoken');
+const StudentFactory = require('../models/Student');
+const TeacherFactory = require('../models/Teacher');
+const { getMongoose } = require('../config/db');
+
+module.exports = async (req, res, next) => {
+  try {
+    let token = req.headers.authorization;
+    if (!token || !token.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Not authorized' });
+    }
+    token = token.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const mongoose = getMongoose();
+    const Student = StudentFactory(mongoose);
+    const Teacher = TeacherFactory(mongoose);
+
+    const role = decoded.role || 'student';
+    const Model = role === 'teacher' ? Teacher : Student;
+    const user = await Model.findById(decoded.id).select('-password');
+    if (!user) return res.status(401).json({ success: false, message: 'User not found' });
+
+    // attach
+    req.user = user;
+    req.userRole = role;
+    next();
+  } catch (err) {
+    console.error('Auth middleware error', err);
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }// src/middleware/authMiddleware.js
+const jwt = require("jsonwebtoken");
+const { getMongoose } = require("../config/db");
+
+module.exports = async (req, res, next) => {
+  try {
+    let authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Not authorized"
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const mongoose = getMongoose();
+
+    // ✅ FETCH REGISTERED MODELS
+    const Student = mongoose.model("Student");
+    const Teacher = mongoose.model("Teacher");
+
+    const role = decoded.role || "student";
+    const Model = role === "teacher" ? Teacher : Student;
+
+    const user = await Model.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // ✅ ATTACH USER
+    req.user = user;
+    req.userRole = role;
+
+    next();
+  } catch (err) {
+    console.error("Auth middleware error", err);
+    return res.status(401).json({
+      success: false,
+      message: "Invalid token"
+    });
+  }
+};
+
+};

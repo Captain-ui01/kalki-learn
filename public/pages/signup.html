@@ -1,0 +1,100 @@
+<!-- signup.html (replace your existing signup form markup with this) -->
+<div class="container">
+  <div class="form-container">
+    <h2 class="form-title">Create Your Account</h2>
+
+    <form id="signup-form" autocomplete="off">
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name" required>
+      </div>
+
+      <!-- OTP Wrapper to prevent hiding/overlapping issues -->
+<div id="otp-wrapper" class="otp-wrapper" style="display:block;position:relative;z-index:20;">
+
+    <div class="form-group">
+  <label for="signup-email">Email Address</label>
+
+  <!-- Email + Send OTP row -->
+  <div class="email-otp-row">
+    <input
+      type="email"
+      id="signup-email"
+      class="form-control"
+      placeholder="Enter your email"
+      required
+    />
+
+    <button
+      type="button"
+      id="send-otp-btn"
+      class="btn btn-primary otp-btn otp-btn-outline"
+    >
+      Send OTP
+    </button>
+  </div>
+
+  <small id="email-otp-feedback" class="otp-feedback"></small>
+</div>
+
+<!-- OTP row -->
+<div id="otp-row" class="otp-row">
+  <input
+    type="text"
+    id="signup-otp"
+    maxlength="6"
+    class="form-control"
+    placeholder="Enter 6-digit code"
+  />
+
+  <!-- <div id="otp-action" class="otp-action"> -->
+  <button
+    type="button"
+    id="verify-otp-btn"
+    class="btn btn-primary otp-btn"
+  >
+    Verify OTP
+  </button>
+
+  <!-- ✅ VERIFIED ICON (hidden by default) -->
+ <!--- <div id="verified-icon" class="verified-icon" title="Email verified">
+    ✓
+  </div>
+  </div> -->
+  <small id="otp-feedback" class="otp-feedback"></small>
+</div>
+
+
+</div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-confirm-password">Confirm Password</label>
+        <input type="password" id="signup-confirm-password" class="form-control" placeholder="Confirm your password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-role">Register as</label>
+        <select id="signup-role" class="form-control" required>
+          <option value="" disabled selected>Select role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Tutor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label><input type="checkbox" id="terms" required> I agree to the <a href="#">Terms</a> and <a href="#">Privacy</a></label>
+      </div>
+
+      <button id="create-account-btn" type="submit" class="btn btn-primary" style="width:100%;" disabled>Create Account</button>
+    </form>
+
+    <div class="form-footer" style="margin-top:12px;">
+      <p>Already have an account? <a href="javascript:void(0)" onclick="showPage('login-page')">Login here</a></p>
+    </div>
+  </div>
+</div>
