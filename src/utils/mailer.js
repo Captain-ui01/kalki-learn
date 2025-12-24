@@ -3,21 +3,10 @@ const nodemailer = require('nodemailer');
 
 // ---------- SMTP TRANSPORTER ----------
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: process.env.SMTP_SECURE === 'true', // true for 465
+  service: "gmail",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
-  }
-});
-
-// verify SMTP connection on server start
-transporter.verify((err, success) => {
-  if (err) {
-    console.error('SMTP transporter verify failed:', err);
-  } else {
-    console.log('SMTP transporter ready');
   }
 });
 
