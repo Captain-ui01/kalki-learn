@@ -1,7 +1,7 @@
 async function loadDashboard() {
     console.log("dashboard.js loaded");
   try {
-    const res = await fetch("/api/student/dashboard", {
+    const res = await fetch("${API_BASE_URL}/api/student/dashboard", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }

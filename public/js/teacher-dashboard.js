@@ -13,7 +13,7 @@ async function initTeacherDashboard() {
     }
 
     // 🔥 FETCH MUST BE FIRST
-    const res = await fetch("/api/teacher/dashboard", {
+    const res = await fetch("${API_BASE_URL}/api/teacher/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`
       }
