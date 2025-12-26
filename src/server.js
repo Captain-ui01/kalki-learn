@@ -1,7 +1,4 @@
 // src/server.js (FINAL & CLEAN)
-app.get('/api/test', (req, res) => {
-  res.json({ ok: true });
-});
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
@@ -28,6 +25,10 @@ const studentRoutes = require("./routes/student.routes");
 const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
+
+app.get('/api/test', (req, res) => {
+  res.json({ ok: true });
+});
 
 // Global middlewares
 app.use(cors());
