@@ -1,33 +1,32 @@
 // src/utils/mailer.js
-const nodemailer = require('nodemailer');
+const sgMail = require("@sendgrid/mail");
 
-// ---------- SMTP TRANSPORTER ----------
-const transporter = nodemailer.createTransport({
- service: "gmail",
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
-
-
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // ---------- SEND GENERIC EMAIL ----------
 async function sendMail({ to, subject, html, text }) {
-  const info = await transporter.sendMail({
-    from: `"Kalki Learning" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-    to,
-    subject,
-    text,
-    html
-  });
-  console.log('Mail sent:', info.messageId);
-  return info;
+  try {
+    const msg = {
+      to,
+      from: process.env.EMAIL_FROM,
+      subject,
+      text,
+      html
+    };
+    console.log("SendGrid Key Loaded:", !!process.env.SENDGRID_API_KEY);
+    await sgMail.send(msg);
+    console.log("Mail sent via SendGrid to:", to);
+  } catch (error) {
+    console.error("SendGrid error:", error.response?.body || error);
+    throw error;
+  }
 }
 
-// ---------- OTP HTML BUILDER  ----------
+// ---------- OTP HTML BUILDER ----------
 function buildOtpEmailHtml({ name, otp, minutes = 10 }) {
-  const logo = 'https://content3.jdmagicbox.com/v2/comp/ahmedabad/x4/079pxx79.xx79.231117201306.x4x4/catalogue/kalki-orignals-sarangpur-ahmedabad-women-readymade-garment-retailers-3ldqropqb6.jpg';
+  const logo =
+    "https://content3.jdmagicbox.com/v2/comp/ahmedabad/x4/079pxx79.xx79.231117201306.x4x4/catalogue/kalki-orignals-sarangpur-ahmedabad-women-readymade-garment-retailers-3ldqropqb6.jpg";
+
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;color:#222;">
     <div style="max-width:680px;margin:0 auto;border:1px solid #eee;">
@@ -40,8 +39,9 @@ function buildOtpEmailHtml({ name, otp, minutes = 10 }) {
       </div>
       <div style="padding:36px;background:#fafbfd">
         <p style="margin:0 0 18px;color:#333;font-size:15px">
-          Hi ${name || 'there'},<br/><br/>
-          Use the verification code below to verify your email address for your Kalki account. The code will expire in ${minutes} minutes.
+          Hi ${name || "there"},<br/><br/>
+          Use the verification code below to verify your email address for your Kalki account.
+          The code will expire in ${minutes} minutes.
         </p>
         <div style="margin:22px 0;text-align:center">
           <div style="display:inline-block;padding:22px 32px;border-radius:12px;background:white;box-shadow:0 8px 30px rgba(40,30,120,0.08);">
@@ -60,5 +60,4 @@ function buildOtpEmailHtml({ name, otp, minutes = 10 }) {
   `;
 }
 
-// Export functions
 module.exports = { sendMail, buildOtpEmailHtml };
