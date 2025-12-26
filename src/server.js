@@ -1,4 +1,7 @@
 // src/server.js (FINAL & CLEAN)
+app.get('/api/test', (req, res) => {
+  res.json({ ok: true });
+});
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
