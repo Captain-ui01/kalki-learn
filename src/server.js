@@ -1,3 +1,5 @@
+console.log("🔥 SERVER.JS IS EXECUTING 🔥");
+
 // src/server.js (FINAL & CLEAN)
 const path = require('path');
 const express = require('express');
@@ -26,6 +28,9 @@ const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 
+app.get("/api/test", (req, res) => {
+  res.json({ ok: true, msg: "server.js running" });
+});
 
 // Global middlewares
 app.use(cors());
@@ -62,9 +67,6 @@ app.use("/api/teacher", teacherRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/enroll", require("./routes/enrollment"));
 
-app.get("/api/test", (req, res) => {
-  res.json({ ok: true, from: "render" });
-});
 
 // Protected API test
 app.get('/api/protected', authMiddleware, (req, res) => {
