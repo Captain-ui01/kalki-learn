@@ -1,5 +1,3 @@
-console.log("🔥 SERVER.JS IS EXECUTING 🔥");
-
 // src/server.js (FINAL & CLEAN)
 const path = require('path');
 const express = require('express');
@@ -27,10 +25,6 @@ const studentRoutes = require("./routes/student.routes");
 const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
-
-app.get("/api/test", (req, res) => {
-  res.json({ ok: true, msg: "server.js running" });
-});
 
 // Global middlewares
 app.use(cors());
