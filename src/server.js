@@ -26,9 +26,6 @@ const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 
-app.get('/api/test', (req, res) => {
-  res.json({ ok: true });
-});
 
 // Global middlewares
 app.use(cors());
@@ -65,6 +62,9 @@ app.use("/api/teacher", teacherRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/enroll", require("./routes/enrollment"));
 
+app.get("/api/test", (req, res) => {
+  res.json({ ok: true, from: "render" });
+});
 
 // Protected API test
 app.get('/api/protected', authMiddleware, (req, res) => {
