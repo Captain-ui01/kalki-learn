@@ -59,7 +59,7 @@ document.addEventListener("submit", async function (e) {
 
   try {
     // 3️⃣ Send data to backend
-    const res = await fetch("${API_BASE_URL}/api/enroll", {
+    const res = await fetch(`${API_BASE_URL}/api/enroll`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -275,7 +275,7 @@ sendBtn.addEventListener('click', async () => {
   );
 
   try {
-    const res = await fetch('${API_BASE_URL}/api/auth/send-otp', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -322,7 +322,7 @@ sendBtn.addEventListener('click', async () => {
     show(feedbackOtp, 'Verifying…');
 
     try {
-      const res = await fetch('${API_BASE_URL}/api/auth/verify-otp', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp })
@@ -389,7 +389,7 @@ sendBtn.addEventListener('click', async () => {
     
     
     try {
-      const res = await fetch('${API_BASE_URL}/api/auth/signup', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role })
@@ -422,7 +422,7 @@ async function performLogin({ email, password, role }) {
 
   try {
     // include role if you want backend to know (optional)
-    const res = await fetch('${API_BASE_URL}/api/auth/login', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, role })
@@ -555,7 +555,7 @@ if (tutorForm) {
             const message = contactForm.querySelector('#message').value;
 
             try {
-                const res = await fetch('${API_BASE_URL}/api/contact', {
+                const res = await fetch(`${API_BASE_URL}/api/contact`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, subject, message })
@@ -848,7 +848,7 @@ function createChatPanelIfNeeded() {
     if (!msg) return alert('Please enter a message.');
     // you can wire this to your contact API to save the message in DB
     try {
-      const res = await fetch('${API_BASE_URL}/api/contact', {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: getUser().name, email: getUser().email, subject: 'Chat message', message: msg })
@@ -960,7 +960,7 @@ function createProfileModalIfNeeded() {
         const form = new FormData();
         form.append('avatar', file);
         const token = localStorage.getItem('token');
-        const res = await fetch('${API_BASE_URL}/api/auth/avatar', {
+        const res = await fetch(`${API_BASE_URL}/api/auth/avatar`, {
           method: 'POST',
           headers: token ? { 'Authorization': 'Bearer ' + token } : {},
           body: form
