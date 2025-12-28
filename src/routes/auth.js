@@ -58,6 +58,7 @@ router.post(
   authController.signup
 );
 
+console.log("API_BASE_URL =", window.API_BASE_URL);
 router.post('/send-otp', authController.sendOtp);
 router.post('/verify-otp', authController.verifyOtp);
 
