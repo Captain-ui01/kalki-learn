@@ -27,7 +27,14 @@ const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 
 // Global middlewares
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://kalkilearning.com",
+    "https://www.kalkilearning.com"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 /* ------------------------------------------
