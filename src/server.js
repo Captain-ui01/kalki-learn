@@ -27,6 +27,10 @@ const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 
 // Global middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ CORS (NO wildcard route)
 app.use(cors({
   origin: [
     "https://kalkilearning.com",
@@ -35,9 +39,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.options("*", cors()); // 🔥 VERY IMPORTANT
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 /* ------------------------------------------
    CONNECT DATABASE + INITIALIZE MODELS HERE
