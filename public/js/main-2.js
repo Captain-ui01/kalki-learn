@@ -1,3 +1,4 @@
+const API_BASE_URL = window.API_BASE_URL;
 // Load page content dynamically
 async function loadPageContent(pageId) {
     const pageElement = document.getElementById(pageId);
