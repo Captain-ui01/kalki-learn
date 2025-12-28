@@ -33,9 +33,11 @@ app.use(cors({
     "https://www.kalkilearning.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /* ------------------------------------------
    CONNECT DATABASE + INITIALIZE MODELS HERE
