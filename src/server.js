@@ -32,10 +32,10 @@ app.use(cors({
     "https://kalkilearning.com",
     "https://www.kalkilearning.com"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+app.options("*", cors()); // 🔥 VERY IMPORTANT
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

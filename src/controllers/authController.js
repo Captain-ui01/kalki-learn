@@ -18,6 +18,7 @@ function hashOtp(otp) {
 }
 
 exports.sendOtp = async (req, res) => {
+  console.log("🔥 SEND OTP ROUTE HIT", req.body);
   try {
     const { email, name } = req.body || {};
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
