@@ -5,8 +5,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const User = require('../models/User');         // optional shared user model
-const Student = require('../models/Student');   // students collection model
-const Teacher = require('../models/Teacher');   // teachers collection model
 
 const crypto = require('crypto');
 const EmailOtp = require('../models/EmailOtp');
@@ -98,10 +96,7 @@ exports.uploadAvatar = async (req, res) => {
     const avatarUrl = `/uploads/${req.file.filename}`;
 
     // Try to find user in shared User collection first, then students/teachers
-    let user = await User.findById(userId);
-    if (!user) {
-      user = await Student.findById(userId) || await Teacher.findById(userId);
-    }
+    const user = await User.findById(userId);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     user.avatar = avatarUrl;
@@ -134,17 +129,33 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+exports.removeAvatar = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $unset: { avatar: "" } }, // 🔴 removes avatar field
+      { new: true }
+    );
+
+    return res.json({
+      success: true,
+      message: "Avatar removed successfully",
+      user
+    });
+  } catch (err) {
+    console.error("Remove avatar error:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
 // Generate JWT — include role
 const generateToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '7d' });
 };
 
-// Helper: pick model for a role
-function modelForRole(role) {
-  const r = (role || '').toLowerCase();
-  if (r === 'teacher' || r === 'tutor') return Teacher;
-  return Student;
-}
+
 
 // POST /api/auth/signup
 exports.signup = async (req, res) => {
@@ -164,10 +175,8 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid role' });
     }
 
-    const ModelToUse = modelForRole(userRole);
-
     // Check existing in chosen collection
-    const existing = await ModelToUse.findOne({ email: email.toLowerCase().trim() });
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
     if (existing) {
       return res.status(409).json({ success: false, message: 'User with that email already exists.' });
     }
@@ -182,13 +191,10 @@ exports.signup = async (req, res) => {
     // Optionally delete OTP docs after verification (clean up)
     await EmailOtp.deleteMany({ email: normalizedEmail });
 
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    const userDoc = new ModelToUse({
+    const userDoc = new User({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      password: hashed,
+      password,
       role: userRole
     });
 
@@ -231,10 +237,7 @@ exports.login = async (req, res) => {
     const emailNorm = email.toLowerCase().trim();
 
     // Step 1: ALWAYS search all collections first
-    let user =
-      await Student.findOne({ email: emailNorm }) ||
-      await Teacher.findOne({ email: emailNorm }) ||
-      await User.findOne({ email: emailNorm });
+    const user = await User.findOne({ email: emailNorm });
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });

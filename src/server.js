@@ -20,7 +20,7 @@ const contactRouter = require('./routes/contact');
 const authRouter = require('./routes/auth');
 const teacherRoutes = require("./routes/teacher.routes");
 const studentRoutes = require("./routes/student.routes");
-
+const dashboardRoutes = require("./routes/dashboard");
 
 const authMiddleware = require('./middleware/authMiddleware');
 
@@ -30,6 +30,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// app.use(cors());
 // ✅ CORS (NO wildcard route)
 app.use(cors({
   origin: [
@@ -38,7 +39,7 @@ app.use(cors({
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-}));
+})); 
 
 /* ------------------------------------------
    CONNECT DATABASE + INITIALIZE MODELS HERE
@@ -70,7 +71,8 @@ app.use('/api/auth', authRouter);
 app.use("/api/teacher", teacherRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/enroll", require("./routes/enrollment"));
-
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/uploads", express.static("uploads"));
 
 // Protected API test
 app.get('/api/protected', authMiddleware, (req, res) => {

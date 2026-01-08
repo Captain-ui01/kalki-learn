@@ -1,0 +1,99 @@
+<div class="kalki-new-dashboard">
+
+    <!-- HEADER -->
+    <div class="kdb-top">
+      <div class="kdb-greet">
+        <h2>Hello 👋</h2>
+        <p>Learn. Practice. Grow.</p>
+      </div>
+
+      <div class="kdb-actions">
+        <div class="kdb-bell">🔔</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="kdb-main">
+
+      <!-- LEFT -->
+      <div>
+        <div class="kdb-overview">
+          <h3>Overview</h3>
+
+          <div class="kdb-ov-grid">
+
+  <!-- Courses in Progress -->
+  <div class="kdb-ov-card kdb-orange">
+    <div class="kdb-ov-head">
+      <span class="kdb-ov-icon">📘</span>
+      <span class="kdb-ov-title">Courses in Progress</span>
+    </div>
+    <div class="kdb-ov-number">0</div>
+    <div class="kdb-progress">
+    <span class="kdb-progress-fill orange"></span>
+  </div>
+  </div>
+
+  <!-- Courses Completed -->
+  <div class="kdb-ov-card kdb-green">
+    <div class="kdb-ov-head">
+      <span class="kdb-ov-icon">✅</span>
+      <span class="kdb-ov-title">Courses Completed</span>
+    </div>
+    <div class="kdb-ov-number">0</div>
+    <div class="kdb-progress">
+    <span class="kdb-progress-fill green"></span>
+  </div>
+  </div>
+
+  <!-- Certificates -->
+  <div class="kdb-ov-card kdb-blue">
+    <div class="kdb-ov-head">
+      <span class="kdb-ov-icon">🎓</span>
+      <span class="kdb-ov-title">Certificates</span>
+    </div>
+    <div class="kdb-ov-number">0</div>
+    <div class="kdb-progress">
+    <span class="kdb-progress-fill blue"></span>
+  </div>
+  </div>
+
+  <!-- Hours Learned (REPLACED) -->
+  <div class="kdb-ov-card kdb-purple">
+    <div class="kdb-ov-head">
+      <span class="kdb-ov-icon">⏱️</span>
+      <span class="kdb-ov-title">Hours Learned</span>
+    </div>
+    <div class="kdb-ov-number">0</div>
+    <div class="kdb-progress">
+    <span class="kdb-progress-fill purple"></span>
+  </div>
+  </div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="kdb-right">
+        <div class="kdb-profile">
+          <img src="assets/profile.png" alt="Profile">
+          <h4>Student</h4>
+          <p>Kalki Learner</p>
+        </div>
+
+        <div class="kdb-calendar">
+          <strong>February 2025</strong>
+          <p style="margin-top:10px;color:#6b7280">Calendar coming soon</p>
+        </div>
+
+        <div class="kdb-events">
+          <strong>Upcoming Events</strong>
+          <div class="kdb-event">No events scheduled</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>

@@ -25,7 +25,7 @@ async function sendMail({ to, subject, html, text }) {
 // ---------- OTP HTML BUILDER ----------
 function buildOtpEmailHtml({ name, otp, minutes = 10 }) {
   const logo =
-    "https://content3.jdmagicbox.com/v2/comp/ahmedabad/x4/079pxx79.xx79.231117201306.x4x4/catalogue/kalki-orignals-sarangpur-ahmedabad-women-readymade-garment-retailers-3ldqropqb6.jpg";
+    "/images/kalki-logo.png";
 
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;color:#222;">

@@ -2,5 +2,4 @@ node_modules/
 .env
 uploads/
 dist/
-favicon/
-favicon.ico
+

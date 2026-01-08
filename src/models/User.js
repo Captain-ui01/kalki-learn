@@ -17,16 +17,42 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: { 
+        type: String, 
+        enum: ['student', 'teacher'], 
+        required: true, 
+        default: 'student' 
+    },
+        // Dashboard-related fields
+    enrolledCourses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        default: []
+    }],
+
+    completedCourses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        default: []
+    }],
+
+    certificates: [{
+        type: String, // certificate URL or ID
+        default: []
+    }],
+
+    hoursLearned: {
+        type: Number,
+        default: 0
+    },
     avatar: { 
         type: String,
-         default: null 
+         default: "" 
     },
     createdAt: { 
       type: Date, 
       default: Date.now 
-    },
-    role: { type: String, enum: ['student', 'teacher'], required: true, default: 'student' },
-    
+    }
 }, { timestamps: true });
 
 // Hash password before saving

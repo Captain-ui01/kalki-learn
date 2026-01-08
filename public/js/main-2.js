@@ -432,12 +432,23 @@ async function performLogin({ email, password, role }) {
     const data = await res.json();
     if (res.ok && data.success) {
       // save token & user
-      if (data.token) localStorage.setItem('token', data.token);
+      if (data.token) { 
+      localStorage.setItem('token', data.token); 
+      localStorage.setItem("userName", data.user.name);    
+      localStorage.setItem("userRole", data.user.role);
+      localStorage.setItem("userAvatar", data.user.avatar || "");
+      }
+
       if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
       setAuth(data.user, data.token); // re-render UI
       redirectAfterLogin(data.user);
       return { ok: true, data };
-    } else {
+    } else { 
+      localStorage.removeItem("token");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("userAvatar");
+
       return { ok: false, message: data.message || 'Invalid credentials' };
     }
   } catch (err) {
@@ -731,7 +742,9 @@ function setAuth(user, token) {
 function clearAuth() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.removeItem("userAvatar");
   renderAuthUI();
+  loadProfileAvatar();
 }
 
 // get user object
@@ -807,7 +820,7 @@ function renderChatPill() {
   pill.className = 'chat-pill';
   pill.setAttribute('role', 'button');
   pill.innerHTML = `
-    <div class="pill-avatar"><img src="${user.avatar || user.photo || 'https://www.gravatar.com/avatar/?d=mp'}" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
+    <div class="pill-avatar"><img src="${user.avatar || 'https://www.gravatar.com/avatar/?d=mp'}" alt="avatar" style="width:100%;height:100%;object-fit:cover"></div>
     <div class="pill-label" style="color:white;font-weight:600;font-size:0.95rem">Help & Chat</div>
     <div class="unread" id="chat-unread" style="display:none">1</div>
   `;
@@ -888,7 +901,7 @@ function createProfileModalIfNeeded() {
       <div class="profile-top">
         <div class="avatar-wrapper">
           <img id="pm-avatar-img" src="${(getUser() && (getUser().avatar || getUser().photo)) || 'https://www.gravatar.com/avatar/?d=mp'}" alt="avatar">
-          <label class="avatar-edit" title="Change avatar">
+          <label class="avatar-edit" title="Add/Change avatar">
             <input id="pm-avatar-input" type="file" accept="image/*" style="display:none" />
             <i class="fas fa-pencil-alt"></i>
           </label>
@@ -899,12 +912,13 @@ function createProfileModalIfNeeded() {
             <button id="pm-edit-name-btn" class="icon-btn" title="Edit name"><i class="fas fa-pencil-alt"></i></button>
           </div>
           <div class="profile-email"><strong>Email:</strong> <span id="pm-email-text">${(getUser() && getUser().email) || ''}</span></div>
-        </div>
+          <div id="pm-remove-avatar-text" class="pm-remove-avatar"> Remove avatar </div>
+          </div>
       </div>
 
       <div class="profile-actions">
         <button id="pm-save-btn" class="btn btn-primary">Save</button>
-        <button id="pm-cancel-btn" class="btn btn-outline">Close</button>
+        <button id="pm-cancel-btn" class="btn btn-outline pm-close-btn">Cancel</button>
       </div>
     </div>
   `;
@@ -924,6 +938,72 @@ function createProfileModalIfNeeded() {
     const reader = new FileReader();
     reader.onload = (ev) => avatarImg.src = ev.target.result;
     reader.readAsDataURL(file);
+  });
+
+  const removeAvatarText = modal.querySelector("#pm-remove-avatar-text");
+
+  if (removeAvatarText) {
+    removeAvatarText.addEventListener("click", async () => {
+    const user = getUser();
+    if (!user) return;
+    localStorage.removeItem("userAvatar");
+    // 1️⃣ Remove avatar from user object
+    delete user.avatar;
+
+    // 2️⃣ Update localStorage
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // 3️⃣ Reset profile popup image
+    const avatarImg = modal.querySelector("#pm-avatar-img");
+    avatarImg.src = "https://www.gravatar.com/avatar/?d=mp";
+
+    // 4️⃣ Refresh navbar + UI immediately
+    loadProfileAvatar();
+    renderAuthUI();
+    // OPTIONAL: backend cleanup (safe to keep commented)
+    /*
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("/api/auth/avatar", {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+    } catch (e) {
+      console.warn("Avatar backend removal skipped");
+    }
+    */
+  });
+}
+
+document.getElementById("pm-remove-avatar-text")
+  .addEventListener("click", async () => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+      await fetch(`${API_BASE_URL}/api/auth/avatar`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      // ✅ Remove locally
+      const user = getUser();
+      delete user.avatar;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.removeItem("userAvatar");
+
+      // ✅ Update UI everywhere
+      document.getElementById("pm-avatar-img").src = "/images/default-avatar.png";
+      renderAuthUI();
+      loadProfileAvatar();
+
+    } catch (err) {
+      console.error("Remove avatar failed", err);
+    }
   });
 
   // edit name inline
@@ -967,8 +1047,13 @@ function createProfileModalIfNeeded() {
           body: form
         });
         const data = await res.json();
-        if (res.ok && data.success && data.url) {
-          user.avatar = data.url; // server should return saved file url (e.g. /uploads/xxx)
+        if (res.ok && data.success && data.avatar) {
+          // 1️⃣ Update user object
+          user.avatar = data.avatar;
+
+          // 3️⃣ Update profile popup immediately
+          document.getElementById("pm-avatar-img").src = data.avatar;
+
         } else {
           // fallback: keep preview (already set) but warn user
           console.warn('Avatar upload failed', data);
@@ -981,6 +1066,7 @@ function createProfileModalIfNeeded() {
     // persist locally
     localStorage.setItem('user', JSON.stringify(user));
     renderAuthUI();            // re-render header avatar + buttons
+    loadProfileAvatar();
     closeProfileModal();
   });
 }

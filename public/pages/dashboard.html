@@ -3,7 +3,7 @@
     <!-- HEADER -->
     <div class="kdb-top">
       <div class="kdb-greet">
-        <h2>Hello 👋</h2>
+        <h2 id="dashboard-greeting">Hello 👋</h2>
         <p>Learn. Practice. Grow.</p>
       </div>
 
@@ -28,9 +28,21 @@
       <span class="kdb-ov-icon">📘</span>
       <span class="kdb-ov-title">Courses in Progress</span>
     </div>
-    <div class="kdb-ov-number">0</div>
+    <div class="kdb-ov-number" id="kdb-progress">N/A</div>
     <div class="kdb-progress">
     <span class="kdb-progress-fill orange"></span>
+  </div>
+  </div>
+
+  <!-- Hours Learned (REPLACED) -->
+  <div class="kdb-ov-card kdb-purple">
+    <div class="kdb-ov-head">
+      <span class="kdb-ov-icon">⏱️</span>
+      <span class="kdb-ov-title">Hours Learned</span>
+    </div>
+    <div class="kdb-ov-number" id="kdb-hours">N/A</div>
+    <div class="kdb-progress">
+    <span class="kdb-progress-fill purple"></span>
   </div>
   </div>
 
@@ -40,7 +52,7 @@
       <span class="kdb-ov-icon">✅</span>
       <span class="kdb-ov-title">Courses Completed</span>
     </div>
-    <div class="kdb-ov-number">0</div>
+    <div class="kdb-ov-number" id="kdb-complete">N/A</div>
     <div class="kdb-progress">
     <span class="kdb-progress-fill green"></span>
   </div>
@@ -52,46 +64,113 @@
       <span class="kdb-ov-icon">🎓</span>
       <span class="kdb-ov-title">Certificates</span>
     </div>
-    <div class="kdb-ov-number">0</div>
+    <div class="kdb-ov-number" id="kdb-cert">N/A</div>
     <div class="kdb-progress">
     <span class="kdb-progress-fill blue"></span>
-  </div>
-  </div>
-
-  <!-- Hours Learned (REPLACED) -->
-  <div class="kdb-ov-card kdb-purple">
-    <div class="kdb-ov-head">
-      <span class="kdb-ov-icon">⏱️</span>
-      <span class="kdb-ov-title">Hours Learned</span>
-    </div>
-    <div class="kdb-ov-number">0</div>
-    <div class="kdb-progress">
-    <span class="kdb-progress-fill purple"></span>
   </div>
   </div>
 
 </div>
 
         </div>
+
+        <!-- ================= CONTINUE LEARNING & RECOMMENDED ================= -->
+<div class="kdb-learning-grid">
+
+  <!-- CONTINUE LEARNING -->
+<div class="kdb-card">
+  <h4 class="kdb-card-title">📖 Continue Learning</h4>
+
+  <!-- EMPTY STATE (JS WILL CONTROL CONTENT) -->
+  <div id="continue-learning-empty" class="kdb-empty" style="display:none;"></div>
+
+  <!-- DYNAMIC COURSE LIST -->
+  <div id="continue-learning-list" class="kdb-course-list"></div>
+</div>
+
+</div>
+
+<!-- ================= RECOMMENDED COURSES ================= -->
+<div class="kdb-recommended">
+  <h4 class="kdb-card-title">⭐ Recommended Courses</h4>
+
+  <div class="kdb-course-grid">
+
+    <div class="kdb-course-card">
+      <img src="https://www.thoughtco.com/thmb/094YF3bQBiuV_13n92GFQZWkM7k=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/JavaScript-58acbb8a3df78c345bad32c2.jpg" alt="JavaScript">
+      <h5>JavaScript</h5>
+      <p>Master Course · 100 hours</p>
+      <button>Explore</button>
+    </div>
+
+    <div class="kdb-course-card">
+      <img src="https://www.strivemindz.com/images/offerings/mobile/ai-ml-development.jpg" alt="AI Prompt">
+      <h5>AI Prompt Engineering</h5>
+      <p>Advanced · 90 hours</p>
+      <button>Explore</button>
+    </div>
+
+    <div class="kdb-course-card">
+      <img src="https://www.mygreatlearning.com/blog/wp-content/uploads/2019/09/What-is-data-science-2.jpg" alt="Data Science">
+      <h5>Data Science</h5>
+      <p>All Levels · 120 hours</p>
+      <button>Explore</button>
+    </div>
+
+  </div>
+</div>
+
       </div>
 
       <!-- RIGHT -->
       <div class="kdb-right">
         <div class="kdb-profile">
-          <img src="assets/profile.png" alt="Profile">
-          <h4>Student</h4>
-          <p>Kalki Learner</p>
+        <div class="kdb-profile-avatar">
+          <img id="profile-avatar" src="images/default-avatar.png" alt="Profile">
         </div>
+        <h4>Student</h4>
+        <p>Kalki Learner</p>
+      </div>
 
         <div class="kdb-calendar">
-          <strong>February 2025</strong>
-          <p style="margin-top:10px;color:#6b7280">Calendar coming soon</p>
+          <div id="calendar-month" class="calendar-header">
+            Month Year
+          </div>
+
+        <div class="calendar-grid">
+        <div class="calendar-week">
+          <span>Sun</span><span>Mon</span><span>Tue</span>
+          <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
         </div>
 
-        <div class="kdb-events">
-          <strong>Upcoming Events</strong>
-          <div class="kdb-event">No events scheduled</div>
+        <div id="calendar-days" class="calendar-days">
+          <!-- JS will generate dates here -->
         </div>
+        </div>
+        </div>
+
+
+       <div class="kdb-events">
+      <strong>Upcoming Events</strong>
+
+      <!-- EMPTY STATE -->
+      <div id="events-empty" class="kdb-empty" style="display:none;"></div>
+
+      <!-- EVENTS LIST -->
+      <div id="events-list"></div>
+    </div>
+
+      <!-- ACHIEVEMENTS -->
+    <div class="kdb-card">
+      <h4 class="kdb-card-title">🏆 Achievements</h4>
+
+      <!-- EMPTY STATE (JS CONTROLS THIS) -->
+      <div id="achievement-empty" class="kdb-empty" style="display:none;"></div>
+
+      <!-- ACHIEVEMENTS LIST -->
+      <div id="achievement-list"></div>
+    </div>
+
       </div>
 
     </div>

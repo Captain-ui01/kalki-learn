@@ -45,6 +45,11 @@ router.post('/avatar', authMiddleware, upload.single('avatar'), authController.u
 // Protected profile update route
 router.put('/profile', authMiddleware, authController.updateProfile);
 
+router.delete(
+  "/avatar",
+  authMiddleware,
+  authController.removeAvatar
+);
 
 // --- Signup ---
 router.post(
